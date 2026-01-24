@@ -1,0 +1,47 @@
+# IDEs and editors
+/.vscode
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# Visual Studio
+.vs/
+*.vcxproj
+*.vcxproj.filters
+*.vcxproj.user
+*.sln
+
+# Build artifacts
+build/
+*.o
+*.obj
+*.lib
+*.a
+*.exe
+*.out
+*.so
+*.dylib
+
+# CMake generated files
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+*.cmake
+!CMakeLists.txt
+
+# Downloaded Hyperscan files (everything except our custom files)
+fdr/*
+
+# Keep our custom files (explicitly not ignored)
+!fdr/CMakeLists.txt
+!fdr/example.cpp
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+env/
+venv/
