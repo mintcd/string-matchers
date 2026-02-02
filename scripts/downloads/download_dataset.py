@@ -11,7 +11,7 @@ ET_OPEN_URL = "https://rules.emergingthreats.net/open/snort-2.9.0/emerging.rules
 TALOS_COMMUNITY_URL = "https://www.snort.org/downloads/community/snort3-community-rules.tar.gz"
 
 
-def download_rulesets(base_dir="../../dataset"):
+def download_raw(base_dir="../../dataset"):
     """Download and extract Snort rulesets for testing.
     
     Args:
@@ -67,7 +67,7 @@ def download_rulesets(base_dir="../../dataset"):
     return True
 
 
-def extract_patterns(base_dir="../../dataset", output_file="patterns.txt", max_patterns=None):
+def extract(base_dir="../../dataset", output_file="patterns.txt", max_patterns=None):
     """Extract string patterns from Snort rules for testing.
     
     Args:
@@ -109,7 +109,8 @@ def extract_patterns(base_dir="../../dataset", output_file="patterns.txt", max_p
                     for match in matches:
                         # Skip patterns with hex content (|XX|) for simplicity
                         if '|' not in match and len(match) > 2:
-                            patterns.add(match)
+                            # Trim leading/trailing whitespace from extracted patterns
+                            patterns.add(match.strip())
         except Exception as e:
             print(f"Warning: Could not read {rules_file}: {e}")
     
@@ -131,7 +132,8 @@ def extract_patterns(base_dir="../../dataset", output_file="patterns.txt", max_p
         print(f"Pattern length: min={min(lengths)}, max={max(lengths)}, avg={sum(lengths)//len(lengths)}")
     
     # Filter and save short patterns (<=8 bytes for FDR)
-    short_patterns = [p for p in sorted(patterns) if len(p) <= 8]
+    # Ensure short patterns are trimmed as well
+    short_patterns = [p for p in sorted(patterns) if len(p.strip()) <= 8]
     short_output_path = base_path / "short_patterns.txt"
     with open(short_output_path, 'w', encoding='utf-8') as f:
         for pattern in short_patterns:
@@ -166,10 +168,6 @@ def extract_patterns(base_dir="../../dataset", output_file="patterns.txt", max_p
     
     return True
 
-
-if __name__ == "__main__":
-    # Download rulesets
-    download_rulesets()
-    
-    # Extract patterns
-    extract_patterns()
+def download_dataset(base_dir="../../dataset"): 
+    download_raw(base_dir)
+    extract(base_dir)

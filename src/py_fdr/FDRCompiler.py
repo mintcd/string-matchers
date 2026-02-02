@@ -1,6 +1,6 @@
 from typing import Dict, List
-from Register import Register
-from utils import LOG
+from .Register import Register
+from .utils import LOG
 
 """
   Assigns patterns to buckets and builds masks.

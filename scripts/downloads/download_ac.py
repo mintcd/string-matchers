@@ -20,15 +20,22 @@ AC_FILES = {
 }
 
 
-def download_ac(base_dir="."):
+def download_ac(base_dir=None):
     """Download Aho-Corasick files from Snort3 repository."""
     print("\n" + "=" * 70)
     print("Aho-Corasick (ac_full + BNFA) - from Snort3")
     print("=" * 70)
     print(f"\nDownloading {len(AC_FILES)} files...")
     print()
-    
-    base_path = Path(base_dir)
+    # Resolve base path: default to repository root when no base_dir provided
+    script_dir = Path(__file__).resolve().parent
+    repo_root = script_dir.parent.parent
+    if base_dir:
+        base_path = Path(base_dir)
+        if not base_path.is_absolute():
+            base_path = (repo_root / base_path).resolve()
+    else:
+        base_path = repo_root
     success_count = 0
     failed_files = []
     total_files = len(AC_FILES)

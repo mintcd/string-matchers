@@ -21,4 +21,5 @@ add_executable(dfc_main
 
 set_target_properties(dfc_main PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+    OUTPUT_NAME "dfc"
 )

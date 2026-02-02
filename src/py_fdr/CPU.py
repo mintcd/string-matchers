@@ -1,5 +1,5 @@
 from typing import Dict, List
-from Register import Register
+from .Register import Register
 
 
 class CPU:

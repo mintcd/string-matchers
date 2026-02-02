@@ -25,7 +25,7 @@ from downloads.fdr_download import download_fdr
 from downloads.dfc_download import download_dfc
 from downloads.ac_download import download_ac
 from downloads.main import download_rulesets, extract_patterns
-from build import build_project, run_example
+from build import build_matcher, run_example
 
 
 def clean_all():
@@ -113,7 +113,7 @@ def main():
     build_results = {}
     
     for matcher in matchers_to_build:
-        if not build_project(matcher):
+        if not build_matcher(matcher):
             print(f"\nWARNING - {matcher.upper()} build failed!")
             build_results[matcher] = False
         else:

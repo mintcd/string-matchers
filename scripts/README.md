@@ -48,7 +48,7 @@ Downloads Snort rulesets and extracts test patterns.
 Build utilities for compiling string matchers.
 
 **Functions:**
-- `build_project(project_dir="fdr")` - Build a project using CMake
+- `build_matcher(project_dir="fdr")` - Build a project using CMake
 - `run_example(project_dir="fdr")` - Run the example executable
 
 ### run.py
@@ -70,7 +70,7 @@ python scripts/run.py --matcher all
 ```python
 from downloads.fdr_download import download_fdr
 from downloads.main import download_rulesets, extract_patterns
-from build import build_project
+from build import build_matcher
 
 # Download FDR
 download_fdr()
@@ -82,7 +82,7 @@ download_rulesets()
 extract_patterns(max_patterns=1000)
 
 # Build
-build_project("fdr")
+build_matcher("fdr")
 ```
 
 ### Use from command line:

@@ -114,11 +114,18 @@ endif()
 add_executable(fdr_example example.cpp)
 target_link_libraries(fdr_example fdr_matcher)
 target_compile_features(fdr_example PUBLIC cxx_std_14)
+set_target_properties(fdr_example PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+)
 
 # Main application executable
 add_executable(fdr_main main.cpp)
 target_link_libraries(fdr_main fdr_matcher)
 target_compile_features(fdr_main PUBLIC cxx_std_17)
+set_target_properties(fdr_main PROPERTIES
+    RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+    OUTPUT_NAME "fdr-minified"
+)
 
 # Test patterns executable
 add_executable(test_patterns test_patterns.cpp)

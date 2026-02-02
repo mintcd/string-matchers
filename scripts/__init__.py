@@ -1,8 +1,8 @@
 """Scripts package for string matchers."""
 
-from .build import build_project, run_example
+from .build import build_matcher, run_example
 
 __all__ = [
-    'build_project',
+    'build_matcher',
     'run_example',
 ]

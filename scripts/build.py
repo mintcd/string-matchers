@@ -2,16 +2,19 @@
 
 import subprocess
 import sys
+import os
 from pathlib import Path
+from typing import Literal
 
 
-def build_project(project_dir="fdr"):
+def build_matcher(project_dir:Literal['fdr', 'ac', 'dfc']="fdr"):
     """Build a project using CMake."""
     print("\n" + "=" * 70)
     print(f"Building {project_dir.upper()} String Matcher")
     print("=" * 70)
     
-    project_path = Path("src") / project_dir
+    repo_root = Path(__file__).resolve().parent.parent
+    project_path = repo_root / "src" / project_dir
     build_dir = project_path / "build"
     
     # Clean build directory if it exists
@@ -34,7 +37,7 @@ def build_project(project_dir="fdr"):
         print(result.stderr)
         return False
     
-    print("OK - CMake configuration successful")
+    print("CMake configuration successful")
     
     # Build
     print(f"\nBuilding...")
@@ -50,10 +53,33 @@ def build_project(project_dir="fdr"):
         print(result.stderr)
         return False
     
-    print("OK - Build successful")
+    print("Build successful")
+    # After successful build, try to locate the built executable and print its path.
+    exe_name = f"{project_dir}.exe" if sys.platform == "win32" else project_dir
+    found_paths = []
+    if build_dir.exists():
+        for p in build_dir.rglob("*"):
+            if p.is_file():
+                if sys.platform == "win32":
+                    if p.name.lower() == exe_name.lower():
+                        found_paths.append(p.resolve())
+                else:
+                    if p.name == exe_name:
+                        found_paths.append(p.resolve())
+
+    if found_paths:
+        print("\nBuilt executable(s):")
+        for p in found_paths:
+            print(p)
+    else:
+        print(f"\nBuilt executable not found automatically. Expected name: {exe_name}")
+        print(f"Search root: {build_dir.resolve()}")
     
     return True
 
+
+    
+    
 
 def run_example(project_dir="fdr"):
     """Run the example executable from a project."""
@@ -62,7 +88,8 @@ def run_example(project_dir="fdr"):
     print("=" * 70)
     print()
     
-    project_path = Path("src") / project_dir
+    repo_root = Path(__file__).resolve().parent.parent
+    project_path = repo_root / "src" / project_dir
     
     # Determine executable path (Windows vs Unix)
     if sys.platform == "win32":
@@ -101,7 +128,7 @@ if __name__ == "__main__":
     
     for matcher in matchers:
         # Build the matcher
-        success = build_project(matcher)
+        success = build_matcher(matcher)
         
         if not success:
             print(f"\nBuild failed for {matcher}")

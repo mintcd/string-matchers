@@ -43,6 +43,8 @@ logs/
 !src/fdr/main.cpp
 !src/fdr/test_patterns.cpp
 !src/fdr/CALLTREE.md
+!src/fdr/config.h
+!src/fdr/hs_version.h
 
 # fdr-minified: ignore everything under it, then whitelist the few files we
 # keep in the repo. Also allow the `fdr/` subdirectory so we can include
@@ -53,6 +55,7 @@ src/fdr-minified/*
 !src/fdr-minified/main.cpp
 !src/fdr-minified/*.md
 !src/fdr-minified/fdr/
+
 !src/fdr-minified/fdr/fdr.c
 
 !src/dfc/CMakeLists.txt

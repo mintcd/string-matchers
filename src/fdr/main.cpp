@@ -232,33 +232,39 @@ int main(int argc, char *argv[]) {
     }
     
     cout << "Loaded " << pattern_strings.size() << " patterns" << endl;
-    
-    // Filter patterns to only those within FDR's 8-byte limit
+
+    // Filter patterns to only those within FDR's 8-byte limit.
+    // Keep original indices so reported pattern IDs match the original
+    // patterns file (so other matchers can be compared directly).
     vector<string> valid_patterns;
+    vector<size_t> valid_orig_ids;
     size_t filtered_count = 0;
-    for (const auto &pattern : pattern_strings) {
+    for (size_t i = 0; i < pattern_strings.size(); i++) {
+        const auto &pattern = pattern_strings[i];
         if (pattern.size() <= 8) {
             valid_patterns.push_back(pattern);
+            valid_orig_ids.push_back(i);
         } else {
             filtered_count++;
         }
     }
-    
+
     if (filtered_count > 0) {
         cout << "Filtered out " << filtered_count << " patterns exceeding 8-byte limit" << endl;
     }
-    cout << "Using " << valid_patterns.size() << " valid patterns" << endl;
-    
+    cout << "Loaded patterns: " << pattern_strings.size() << ", using " << valid_patterns.size() << " valid patterns" << endl;
+
     if (valid_patterns.empty()) {
         cerr << "ERROR: No valid patterns within 8-byte limit!" << endl;
         return 1;
     }
     cout << endl;
-    
-    // Convert to hwlmLiteral format
+
+    // Convert to hwlmLiteral format. Use original pattern indices as the
+    // literal id so matches are reported against the original list.
     vector<hwlmLiteral> literals;
     for (size_t i = 0; i < valid_patterns.size(); i++) {
-        literals.emplace_back(valid_patterns[i], false, (u32)i);
+        literals.emplace_back(valid_patterns[i], false, (u32)valid_orig_ids[i]);
     }
     
     // Step 2: Compile FDR engine
@@ -303,7 +309,9 @@ int main(int argc, char *argv[]) {
         vector<RulesetResult> results;
         
         auto scan_start = chrono::high_resolution_clock::now();
-        size_t total_matches = scanRulesetsFile(rulesets_file, fdr.get(), scratch, valid_patterns, &results);
+        // Pass the original pattern list to the scanner so length lookup
+        // (for converting inclusive end -> start) uses the original indices.
+        size_t total_matches = scanRulesetsFile(rulesets_file, fdr.get(), scratch, pattern_strings, &results);
         auto scan_end = chrono::high_resolution_clock::now();
         
         auto scan_time = chrono::duration_cast<chrono::milliseconds>(scan_end - scan_start).count();
@@ -313,7 +321,8 @@ int main(int argc, char *argv[]) {
         // Step 5: Display results
         cout << endl;
         cout << "=== Results ===" << endl;
-        cout << "  Patterns loaded:      " << valid_patterns.size() << endl;
+        cout << "  Patterns loaded:      " << pattern_strings.size() << endl;
+        cout << "  Valid patterns used:  " << valid_patterns.size() << endl;
         cout << "  Total matches found:  " << mctx.matches.size() << endl;
         cout << "  Bytes scanned:        " << mctx.total_bytes_scanned << endl;
         cout << "  Compilation time:     " << compile_time << " ms" << endl;
@@ -327,9 +336,11 @@ int main(int argc, char *argv[]) {
         // Show top matched patterns
         if (!mctx.matches.empty()) {
             cout << endl << "Top 10 matched patterns:" << endl;
-            vector<size_t> pattern_counts(valid_patterns.size(), 0);
+            vector<size_t> pattern_counts(pattern_strings.size(), 0);
             for (const auto &match : mctx.matches) {
-                pattern_counts[match.first]++;
+                if (match.first < pattern_counts.size()) {
+                    pattern_counts[match.first]++;
+                }
             }
             
             vector<pair<size_t, size_t>> sorted_patterns;
@@ -343,7 +354,7 @@ int main(int argc, char *argv[]) {
             for (size_t i = 0; i < min(size_t(10), sorted_patterns.size()); i++) {
                 size_t count = sorted_patterns[i].first;
                 size_t id = sorted_patterns[i].second;
-                cout << "  [" << id << "] \"" << valid_patterns[id] << "\" - " << count << " matches" << endl;
+                cout << "  [" << id << "] \"" << pattern_strings[id] << "\" - " << count << " matches" << endl;
             }
         }
         

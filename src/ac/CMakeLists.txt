@@ -21,4 +21,5 @@ add_executable(ac_main
 
 set_target_properties(ac_main PROPERTIES
     RUNTIME_OUTPUT_DIRECTORY "${CMAKE_BINARY_DIR}"
+    OUTPUT_NAME "ac"
 )

@@ -1,5 +1,5 @@
-from FDRCompiler import FDRCompiler
-from FDR import FDR
+from .FDRCompiler import FDRCompiler
+from .FDR import FDR
 
 patterns = [l.rstrip('\n') for l in open('dataset/100_short_patterns.txt') if l.strip() and not l.startswith('#')]
 compiler = FDRCompiler(patterns)

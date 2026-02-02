@@ -10,40 +10,40 @@ HYPERSCAN_SRC = f"{HYPERSCAN_REPO}/src"
 # Files to download from Hyperscan repository
 FDR_FILES = {
     # FDR core runtime files
-    "src/fdr/fdr/fdr.c": f"{HYPERSCAN_SRC}/src/fdr/fdr.c",
-    "src/fdr/fdr/fdr.h": f"{HYPERSCAN_SRC}/src/fdr/fdr.h",
-    "src/fdr/fdr/fdr_internal.h": f"{HYPERSCAN_SRC}/src/fdr/fdr_internal.h",
-    "src/fdr/fdr/fdr_loadval.h": f"{HYPERSCAN_SRC}/src/fdr/fdr_loadval.h",
-    "src/fdr/fdr/fdr_confirm.h": f"{HYPERSCAN_SRC}/src/fdr/fdr_confirm.h",
-    "src/fdr/fdr/fdr_confirm_runtime.h": f"{HYPERSCAN_SRC}/src/fdr/fdr_confirm_runtime.h",
+    "src/fdr/fdr/fdr.c": f"{HYPERSCAN_SRC}/fdr/fdr.c",
+    "src/fdr/fdr/fdr.h": f"{HYPERSCAN_SRC}/fdr/fdr.h",
+    "src/fdr/fdr/fdr_internal.h": f"{HYPERSCAN_SRC}/fdr/fdr_internal.h",
+    "src/fdr/fdr/fdr_loadval.h": f"{HYPERSCAN_SRC}/fdr/fdr_loadval.h",
+    "src/fdr/fdr/fdr_confirm.h": f"{HYPERSCAN_SRC}/fdr/fdr_confirm.h",
+    "src/fdr/fdr/fdr_confirm_runtime.h": f"{HYPERSCAN_SRC}/fdr/fdr_confirm_runtime.h",
     
     # FDR compilation files
-    "src/fdr/fdr/fdr_compile.cpp": f"{HYPERSCAN_SRC}/src/fdr/fdr_compile.cpp",
-    "src/fdr/fdr/fdr_compile.h": f"{HYPERSCAN_SRC}/src/fdr/fdr_compile.h",
-    "src/fdr/fdr/fdr_compile_internal.h": f"{HYPERSCAN_SRC}/src/fdr/fdr_compile_internal.h",
-    "src/fdr/fdr/fdr_compile_util.cpp": f"{HYPERSCAN_SRC}/src/fdr/fdr_compile_util.cpp",
-    "src/fdr/fdr/fdr_confirm_compile.cpp": f"{HYPERSCAN_SRC}/src/fdr/fdr_confirm_compile.cpp",
+    "src/fdr/fdr/fdr_compile.cpp": f"{HYPERSCAN_SRC}/fdr/fdr_compile.cpp",
+    "src/fdr/fdr/fdr_compile.h": f"{HYPERSCAN_SRC}/fdr/fdr_compile.h",
+    "src/fdr/fdr/fdr_compile_internal.h": f"{HYPERSCAN_SRC}/fdr/fdr_compile_internal.h",
+    "src/fdr/fdr/fdr_compile_util.cpp": f"{HYPERSCAN_SRC}/fdr/fdr_compile_util.cpp",
+    "src/fdr/fdr/fdr_confirm_compile.cpp": f"{HYPERSCAN_SRC}/fdr/fdr_confirm_compile.cpp",
     
     # TEDDY engine files
-    "src/fdr/fdr/teddy.c": f"{HYPERSCAN_SRC}/src/fdr/teddy.c",
-    "src/fdr/fdr/teddy.h": f"{HYPERSCAN_SRC}/src/fdr/teddy.h",
-    "src/fdr/fdr/teddy_avx2.c": f"{HYPERSCAN_SRC}/src/fdr/teddy_avx2.c",
-    "src/fdr/fdr/teddy_internal.h": f"{HYPERSCAN_SRC}/src/fdr/teddy_internal.h",
-    "src/fdr/fdr/teddy_runtime_common.h": f"{HYPERSCAN_SRC}/src/fdr/teddy_runtime_common.h",
-    "src/fdr/fdr/teddy_compile.cpp": f"{HYPERSCAN_SRC}/src/fdr/teddy_compile.cpp",
-    "src/fdr/fdr/teddy_compile.h": f"{HYPERSCAN_SRC}/src/fdr/teddy_compile.h",
+    "src/fdr/fdr/teddy.c": f"{HYPERSCAN_SRC}/fdr/teddy.c",
+    "src/fdr/fdr/teddy.h": f"{HYPERSCAN_SRC}/fdr/teddy.h",
+    "src/fdr/fdr/teddy_avx2.c": f"{HYPERSCAN_SRC}/fdr/teddy_avx2.c",
+    "src/fdr/fdr/teddy_internal.h": f"{HYPERSCAN_SRC}/fdr/teddy_internal.h",
+    "src/fdr/fdr/teddy_runtime_common.h": f"{HYPERSCAN_SRC}/fdr/teddy_runtime_common.h",
+    "src/fdr/fdr/teddy_compile.cpp": f"{HYPERSCAN_SRC}/fdr/teddy_compile.cpp",
+    "src/fdr/fdr/teddy_compile.h": f"{HYPERSCAN_SRC}/fdr/teddy_compile.h",
     
     # Engine description files
-    "src/fdr/fdr/engine_description.cpp": f"{HYPERSCAN_SRC}/src/fdr/engine_description.cpp",
-    "src/fdr/fdr/engine_description.h": f"{HYPERSCAN_SRC}/src/fdr/engine_description.h",
-    "src/fdr/fdr/fdr_engine_description.cpp": f"{HYPERSCAN_SRC}/src/fdr/fdr_engine_description.cpp",
-    "src/fdr/fdr/fdr_engine_description.h": f"{HYPERSCAN_SRC}/src/fdr/fdr_engine_description.h",
-    "src/fdr/fdr/teddy_engine_description.cpp": f"{HYPERSCAN_SRC}/src/fdr/teddy_engine_description.cpp",
-    "src/fdr/fdr/teddy_engine_description.h": f"{HYPERSCAN_SRC}/src/fdr/teddy_engine_description.h",
+    "src/fdr/fdr/engine_description.cpp": f"{HYPERSCAN_SRC}/fdr/engine_description.cpp",
+    "src/fdr/fdr/engine_description.h": f"{HYPERSCAN_SRC}/fdr/engine_description.h",
+    "src/fdr/fdr/fdr_engine_description.cpp": f"{HYPERSCAN_SRC}/fdr/fdr_engine_description.cpp",
+    "src/fdr/fdr/fdr_engine_description.h": f"{HYPERSCAN_SRC}/fdr/fdr_engine_description.h",
+    "src/fdr/fdr/teddy_engine_description.cpp": f"{HYPERSCAN_SRC}/fdr/teddy_engine_description.cpp",
+    "src/fdr/fdr/teddy_engine_description.h": f"{HYPERSCAN_SRC}/fdr/teddy_engine_description.h",
     
     # Flood detection files
-    "src/fdr/fdr/flood_compile.cpp": f"{HYPERSCAN_SRC}/src/fdr/flood_compile.cpp",
-    "src/fdr/fdr/flood_runtime.h": f"{HYPERSCAN_SRC}/src/fdr/flood_runtime.h",
+    "src/fdr/fdr/flood_compile.cpp": f"{HYPERSCAN_SRC}/fdr/flood_compile.cpp",
+    "src/fdr/fdr/flood_runtime.h": f"{HYPERSCAN_SRC}/fdr/flood_runtime.h",
     
     # Core Hyperscan files
     "src/fdr/grey.cpp": f"{HYPERSCAN_SRC}/grey.cpp",
@@ -157,21 +157,28 @@ FDR_FILES = {
 }
 
 
-def download_fdr(base_dir="."):
+def download_fdr(base_dir=None):
     """Download FDR files from Hyperscan repository."""
     print("=" * 70)
     print("FDR String Matcher Setup")
     print("=" * 70)
     print(f"\nDownloading {len(FDR_FILES)} files from Hyperscan repository...")
     print()
-    
-    base_path = Path(base_dir)
+    # Resolve base path: default to repository root when no base_dir provided
+    script_dir = Path(__file__).resolve().parent
+    repo_root = script_dir.parent.parent
+    if base_dir:
+        base_path = Path(base_dir)
+        if not base_path.is_absolute():
+            base_path = (repo_root / base_path).resolve()
+    else:
+        base_path = repo_root
     success_count = 0
     failed_files = []
     total_files = len(FDR_FILES)
     
     for idx, (dest_path, url) in enumerate(FDR_FILES.items(), 1):
-        print(f"[{idx}/{total_files}] {dest_path} ... ", end="", flush=True)
+        print(f"[{idx}/{total_files}] {url} ... ", end="", flush=True)
         
         dest_file = base_path / dest_path
         dest_file.parent.mkdir(parents=True, exist_ok=True)

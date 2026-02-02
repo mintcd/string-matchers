@@ -10,8 +10,8 @@ import sys
 import time
 from typing import List, Tuple
 
-from FDRCompiler import FDRCompiler
-from FDR import FDR
+from .FDRCompiler import FDRCompiler
+from .FDR import FDR
 
 
 def load_patterns(path: str, max_patterns: int = 0) -> List[str]:

@@ -47,26 +47,30 @@ def load(path: Path):
             d[idx] = matches
     return d
 
+def compare_results(a_path: Path, b_path: Path, show: int = 20) -> int:
+    """Compare two result files and print a summary of differences.
 
-def main():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('a')
-    parser.add_argument('b')
-    parser.add_argument('--show', type=int, default=20,
-                        help='number of mismatches to show')
-    args = parser.parse_args()
+    Args:
+        a_path: Path to first results file
+        b_path: Path to second results file
+        show: number of mismatches to display
+    Returns:
+        Exit code: 0 if files match, 2 if differences found, 3 on error.
+    """
+    # Accept either str or Path for convenience (notebooks often pass str)
+    print(f'Comparing results:\n A: {a_path}\n B: {b_path}\n')
+    a_path = Path(a_path)
+    b_path = Path(b_path)
 
-    A = Path(args.a)
-    B = Path(args.b)
-    if not A.exists():
-        print('File not found:', A)
+    if not a_path.exists():
+        print('File not found:', a_path)
         return 3
-    if not B.exists():
-        print('File not found:', B)
+    if not b_path.exists():
+        print('File not found:', b_path)
         return 3
 
-    Amap = load(A)
-    Bmap = load(B)
+    Amap = load(a_path)
+    Bmap = load(b_path)
 
     Ak = set(Amap.keys())
     Bk = set(Bmap.keys())
@@ -86,7 +90,7 @@ def main():
             mismatches.append((idx, Amap[idx], Bmap[idx]))
 
     print('mismatches:', len(mismatches))
-    toshow = min(len(mismatches), args.show)
+    toshow = min(len(mismatches), show)
     for i in range(toshow):
         idx, a, b = mismatches[i]
         print('\n--- mismatch', i + 1, 'index', idx)
@@ -99,6 +103,15 @@ def main():
     else:
         print('\nDone.')
         return 2
+def main():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('a')
+    parser.add_argument('b')
+    parser.add_argument('--show', type=int, default=20,
+                        help='number of mismatches to show')
+    args = parser.parse_args()
+
+    return compare_results(Path(args.a), Path(args.b), args.show)
 
 
 if __name__ == '__main__':

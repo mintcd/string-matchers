@@ -1,0 +1,1 @@
+This version uses strings for texts and patterns. 
