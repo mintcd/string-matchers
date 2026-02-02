@@ -114,3 +114,13 @@ endif()
 add_executable(fdr_example example.cpp)
 target_link_libraries(fdr_example fdr_matcher)
 target_compile_features(fdr_example PUBLIC cxx_std_14)
+
+# Main application executable
+add_executable(fdr_main main.cpp)
+target_link_libraries(fdr_main fdr_matcher)
+target_compile_features(fdr_main PUBLIC cxx_std_17)
+
+# Test patterns executable
+add_executable(test_patterns test_patterns.cpp)
+target_link_libraries(test_patterns fdr_matcher)
+target_compile_features(test_patterns PUBLIC cxx_std_14)

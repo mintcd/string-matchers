@@ -14,15 +14,7 @@
 *.sln
 
 # Build artifacts
-build/
-*.o
-*.obj
-*.lib
-*.a
-*.exe
-*.out
-*.so
-*.dylib
+build/*
 
 # CMake generated files
 CMakeCache.txt
@@ -31,12 +23,47 @@ cmake_install.cmake
 *.cmake
 !CMakeLists.txt
 
-# Downloaded Hyperscan files (everything except our custom files)
-fdr/*
+# Downloaded Hyperscan sources: ignore third-party folders entirely
+# We ignore the contents but then explicitly whitelist only the small
+# set of files that are our custom modifications. Use trailing "/*"
+# so "!" negations can selectively re-allow files inside.
+src/fdr/*
+src/dfc/*
+src/ac/*
 
-# Keep our custom files (explicitly not ignored)
-!fdr/CMakeLists.txt
-!fdr/example.cpp
+# Dataset (large files not kept in repo)
+dataset/
+output/
+logs/
+
+# Our custom files inside the Hyperscan checkouts - explicitly allow these
+# (order matters: these negations must come after the parent-directory ignore)
+!src/fdr/CMakeLists.txt
+!src/fdr/example.cpp
+!src/fdr/main.cpp
+!src/fdr/test_patterns.cpp
+!src/fdr/CALLTREE.md
+
+# fdr-minified: ignore everything under it, then whitelist the few files we
+# keep in the repo. Also allow the `fdr/` subdirectory so we can include
+# `fdr/fdr.c` specifically.
+src/fdr-minified/*
+!src/fdr-minified/CMakeLists.txt
+!src/fdr-minified/example.cpp
+!src/fdr-minified/main.cpp
+!src/fdr-minified/*.md
+!src/fdr-minified/fdr/
+!src/fdr-minified/fdr/fdr.c
+
+!src/dfc/CMakeLists.txt
+!src/dfc/example.cpp
+!src/dfc/main.cpp
+!src/dfc/test_patterns.cpp
+
+!src/ac/CMakeLists.txt
+!src/ac/example.cpp
+!src/ac/main.cpp
+!src/ac/test_patterns.cpp
 
 # Python
 __pycache__/

@@ -9,6 +9,16 @@ Extracted from Intel Hyperscan - A high-performance SIMD-accelerated literal str
 
 **Source:** [Intel Hyperscan](https://github.com/intel/hyperscan)
 
+### DFC (Direct Filter Classification)
+Extracted from Snort3 - Optimized multi-pattern matching algorithm used in intrusion detection.
+
+**Source:** [Snort3](https://github.com/snort3/snort3)
+
+### Aho-Corasick (AC)
+Extracted from Snort3 - Classic multi-pattern matching algorithm with BNFA variant.
+
+**Source:** [Snort3](https://github.com/snort3/snort3)
+
 ## Quick Start
 
 ### Prerequisites
@@ -24,30 +34,44 @@ Extracted from Intel Hyperscan - A high-performance SIMD-accelerated literal str
 git clone <your-repo-url>
 cd string-matchers
 
-# Run the setup script (downloads files, builds, and runs example)
-python config.py
-
-# Or download only without building
+# Download matchers only
 python config.py --no-build
 
-# Or build without running the example
-python config.py --no-run
+# Download matchers + Snort rulesets + extract patterns
+python config.py --no-build --rulesets --extract-patterns --max-patterns 1000
+
+# Full setup: download, build, and run
+python config.py
 ```
 
 ## What the Setup Script Does
 
 The `config.py` script automatically:
 
-1. **Downloads** all necessary source files from the original Hyperscan GitHub repository
-2. **Creates** the proper directory structure
-3. **Configures** the build with CMake
-4. **Builds** the FDR library and example
-5. **Runs** the example to verify everything works
+1. **Downloads** all necessary source files:
+   - FDR from Hyperscan (122 files)
+   - DFC from Snort3 (4 files)
+   - Aho-Corasick from Snort3 (8 files)
+2. **Downloads** Snort rulesets (optional with `--rulesets`):
+   - ET-Open ruleset (~47 rule files)
+   - Talos Community ruleset
+3. **Extracts** test patterns from rules (optional with `--extract-patterns`)
+4. **Creates** the proper directory structure
+5. **Configures** the build with CMake
+6. **Builds** the FDR library and example
+7. **Runs** the example to verify everything works
 
 ## Directory Structure
 
 ```
 string-matchers/
+    fdr/              # FDR implementation (122 files)
+    dfc/              # DFC implementation (4 files)
+    ac/               # Aho-Corasick implementation (8 files)
+    rulesets/         # Snort rulesets (optional)
+        et-open/      # Emerging Threats Open ruleset
+        talos/        # Talos Community ruleset
+    patterns.txt      # Extracted test patterns (optional)
 ├── config.py           # Setup script
 ├── README.md          # This file
 └── fdr/               # FDR matcher directory

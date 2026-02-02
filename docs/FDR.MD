@@ -1,0 +1,1 @@
+1. Considered architectures: AVX2, AVX512, AVX512VBMI

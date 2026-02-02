@@ -14,7 +14,12 @@
 #include <vector>
 #include <string>
 #include <cstring>
+#include <fstream>
+#include <sstream>
+#include <algorithm>
+#include <cctype>
 #include <memory>
+#include <ctime>
 
 #include "fdr/fdr.h"
 #include "fdr/fdr_compile.h"
@@ -46,22 +51,65 @@ hwlmcb_rv_t matchCallback(size_t end, u32 id, struct hs_scratch *scratch) {
     return HWLM_CONTINUE_MATCHING;
 }
 
-int main() {
+int main(int argc, char **argv) {
     cout << "=== FDR String Matcher Example ===" << endl << endl;
 
-    // Step 1: Define patterns to search for
+    // Step 1: Define patterns to search for (can be provided via CLI)
     vector<hwlmLiteral> literals;
-    
-    // Pattern 0: "hello"
-    literals.emplace_back("hello", false, 0);
-    
-    // Pattern 1: "world"
-    literals.emplace_back("world", false, 1);
-    
-    // Pattern 2: "test"
-    literals.emplace_back("test", false, 2);
 
-    cout << "Patterns to search for:" << endl;
+    auto trim = [](string &s) {
+        s.erase(s.begin(), find_if(s.begin(), s.end(), [](unsigned char ch) { return !isspace(ch); }));
+        s.erase(find_if(s.rbegin(), s.rend(), [](unsigned char ch) { return !isspace(ch); }).base(), s.end());
+    };
+
+    auto split_csv = [&](const string &in) {
+        vector<string> out;
+        string token;
+        istringstream ss(in);
+        while (getline(ss, token, ',')) {
+            trim(token);
+            if (!token.empty()) out.push_back(token);
+        }
+        return out;
+    };
+
+    // Parse CLI: --string "text to scan" and --patterns "p1,p2,..."
+    string input_str;
+    string patterns_str;
+
+    for (int i = 1; i < argc; ++i) {
+        string a = argv[i];
+        if (a == "--string" && i + 1 < argc) {
+            input_str = argv[++i];
+        } else if (a == "--patterns" && i + 1 < argc) {
+            patterns_str = argv[++i];
+        } else if (a == "--help" || a == "-h") {
+            cout << "Usage: fdr_example --string \"text\" --patterns \"p1,p2,...\"\n";
+            return 0;
+        } else {
+            cerr << "Unknown option: " << a << "\n";
+            return 1;
+        }
+    }
+
+    if (input_str.empty() || patterns_str.empty()) {
+        cerr << "ERROR: both --string and --patterns must be provided.\n";
+        cout << "Usage: fdr_example --string \"text\" --patterns \"p1,p2,...\"\n";
+        return 1;
+    }
+
+    // parse patterns CSV and build literals
+    vector<string> pats = split_csv(patterns_str);
+    u32 id = 0;
+    for (auto &p : pats) {
+        literals.emplace_back(p, false, id++);
+    }
+
+    string text = input_str;
+    cout << "Text: \"" << text << "\"" << endl;
+    cout << endl;
+
+    cout << "Patterns" << endl;
     for (const auto &lit : literals) {
         cout << "  [" << lit.id << "] \"" << lit.s << "\"" << endl;
     }
@@ -76,21 +124,33 @@ int main() {
         
         // Get current target (CPU capabilities)
         target_t target = get_current_target();
+
+           cout << "Building FDR prototype..." << endl;
+           cout << "Target info: has_avx2=" << (target.has_avx2() ? "yes" : "no")
+               << ", is_atom_class=" << (target.is_atom_class() ? "yes" : "no") << endl;
+           cout << "Literals count: " << literals.size() << endl;
         
         // Build FDR engine prototype
         // Using engine type HWLM_ENGINE_FDR (value 1)
         auto proto = fdrBuildProto(1, literals, false, target, grey);
         
+
         if (!proto) {
             cout << "ERROR: Failed to build FDR prototype" << endl;
+            cout << "(diagnostic) Failed at fdrBuildProto - proto is null" << endl;
             return 1;
         }
+
+        cout << "FDR proto built" << endl;
         
         // Build the actual FDR engine from prototype
         auto fdr = fdrBuildTable(*proto, grey);
-        
+
+        cout << "FDR table built (returned pointer?) " << (fdr ? "yes" : "no") << endl;
+
         if (!fdr) {
             cout << "ERROR: Failed to build FDR engine" << endl;
+            cout << "(diagnostic) fdrBuildTable returned null" << endl;
             return 1;
         }
         
@@ -111,14 +171,12 @@ int main() {
         cout << "=== Scanning Demonstration ===" << endl;
         cout << endl;
         
-        string text = "hello world, this is a test. hello again!";
-        cout << "Text to scan: \"" << text << "\"" << endl;
-        cout << endl;
-        
         // Perform the scan
         MatchContext mctx;
         g_mctx = &mctx; // Set global context for callback
         hwlm_group_t groups = ~0ULL; // Match all groups
+
+        cout << "Calling fdrExec..." << endl;
         
         hwlm_error_t result = fdrExec(fdr.get(), 
                                       (const u8 *)text.c_str(), 
@@ -161,3 +219,9 @@ int main() {
 
     return 0;
 }
+
+// cd 'D:\Projects\string-matchers\src\fdr-minified\build'
+// cmake --build . --config Debug --target fdr_example;
+// & 'D:\Projects\string-matchers\src\fdr-minified\build\Debug\fdr_example.exe' --string "hello world, this is a test. hello again!" --patterns "hello,world,test" > logfile.txt 2>&1
+
+// cmake --build . --config Debug --target fdr_example; & 'D:\Projects\string-matchers\src\fdr\build\Debug\fdr_example.exe' --string "hello world, this is a test. hello again!" --patterns "hello,world,test"
