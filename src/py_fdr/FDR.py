@@ -48,12 +48,6 @@ class FDR:
         super_char_mask = self.masks.get(super_char)
         LOG(f"Scanning {text[i+j]}, superchar {super_char}, masks\n", super_char_mask, log_file=log_file, indent=2)
 
-        # We cannot ignore the case that this may be the end of a pattern
-        null_super_char_mask = self.masks.get(getSuperChar(text[i+j], 0, self.domain_bits))
-        super_char_mask = super_char_mask & null_super_char_mask
-        LOG(f"Anded mask:\n", super_char_mask, log_file=log_file, indent=2)
-
-
         st_mask = st_mask | (super_char_mask << (j * 8))
 
         LOG("Updated st-mask\n", st_mask, log_file=log_file, indent=2)

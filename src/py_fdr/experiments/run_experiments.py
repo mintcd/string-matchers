@@ -18,7 +18,32 @@ import importlib.util
 
 
 def main():
+    # keep original behavior for CLI when called without args
     base = Path(__file__).parent
+    # rulesets: prefer experiments/rulesets.txt, then experiments/dataset/rulesets.txt, then repo dataset
+    local_dataset = base / 'dataset'
+    rulesets_candidate = base / 'rulesets.txt'
+    if rulesets_candidate.exists():
+        rulesets_path = rulesets_candidate
+    elif (local_dataset / 'rulesets.txt').exists():
+        rulesets_path = local_dataset / 'rulesets.txt'
+    else:
+        rulesets_path = root / 'dataset' / 'rulesets.txt'
+
+    out_base = base / 'output'
+    run_experiments(rulesets_path, out_base)
+
+
+def run_experiments(rulesets_path, output_dir):
+    """Run experiments scanning `rulesets_path` and write outputs to `output_dir`.
+
+    `rulesets_path` and `output_dir` may be strings or Path objects.
+    """
+    base = Path(__file__).parent
+    rulesets_path = Path(rulesets_path)
+    out_base = Path(output_dir)
+    out_base.mkdir(parents=True, exist_ok=True)
+
     # Prefer local experiments/dataset if present (generated tests), else fall back to repo-level dataset
     local_dataset = base / 'dataset'
     # loader for generate_tests helpers (in same folder)
@@ -35,15 +60,6 @@ def main():
     else:
         short_patterns_path = root / 'dataset' / 'short_patterns.txt'
 
-    # rulesets: prefer experiments/rulesets.txt, then experiments/dataset/rulesets.txt, then repo dataset
-    rulesets_candidate = base / 'rulesets.txt'
-    if rulesets_candidate.exists():
-        rulesets_path = rulesets_candidate
-    elif (local_dataset / 'rulesets.txt').exists():
-        rulesets_path = local_dataset / 'rulesets.txt'
-    else:
-        rulesets_path = root / 'dataset' / 'rulesets.txt'
-
     print('short_patterns:', short_patterns_path)
     print('rulesets:', rulesets_path)
 
@@ -58,9 +74,9 @@ def main():
         use_universe = True
 
     # pattern counts: 8,16,24,... up to 50000
-    pattern_counts = list(range(8, 50001, 8))
+    pattern_counts = list(range(8, 50001, 80))
 
-    log_path = base / 'experiment_progress.csv'
+    log_path = out_base / 'experiment_progress.csv'
     if not log_path.exists():
         with log_path.open('w', encoding='utf-8', newline='') as lh:
             writer = csv.writer(lh)
@@ -101,10 +117,6 @@ def main():
             with log_path.open('a', encoding='utf-8', newline='') as lh:
                 writer = csv.writer(lh)
                 writer.writerow([n, f"{avg_time:.6f}", total_matches, total_bytes])
-
-            # write per-length results and metadata in experiments/output
-            out_base = base / 'output'
-            out_base.mkdir(parents=True, exist_ok=True)
 
             # save patterns used for this run
             patterns_file_path = out_base / f'patterns_length_{n}.txt'

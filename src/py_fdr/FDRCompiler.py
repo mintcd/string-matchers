@@ -72,9 +72,25 @@ def buildMasks(buckets, domain_bits, log_file: str | None = None):
       for pat in buckets[b]:
         for pos in range(len(pat)):
             char_pos_from_right = len(pat) - pos - 1
-            super_char = getSuperChar(pat, pos, domain_bits)
-            masks[super_char].setBit(False, char_pos_from_right, b)
-            LOG(f"Pattern '{pat}', char '{pat[pos]}', super-char '{super_char}', pos '{char_pos_from_right}', bucket '{b}', bit set {char_pos_from_right}", log_file=log_file)
+            current_byte = ord(pat[pos])
+            
+            # Check if this is the end of a pattern
+            if pos + 1 < len(pat):
+                # Use exact super-character
+                super_char = getSuperChar(pat, pos, domain_bits)
+                masks[super_char].setBit(False, char_pos_from_right, b)
+                LOG(f"Pattern '{pat}', char '{pat[pos]}', super-char '{super_char}', pos '{char_pos_from_right}', bucket '{b}'", log_file=log_file)
+            else:
+                # At end of pattern - enumerate all possible next byte values ("don't care" mechanism)
+                bits_from_next_byte = domain_bits - 8
+                num_combinations = 1 << bits_from_next_byte
+                
+                # Take from 0..0 to 1..1 (domain_bits-8 bits) as the next byte value
+                for next_val in range(num_combinations):
+                    raw = (current_byte | (next_val << 8)) & ((1 << domain_bits) - 1)
+                    super_char = Register(raw, domain_bits).getValue()
+                    masks[super_char].setBit(False, char_pos_from_right, b)
+                    LOG(f"Pattern '{pat}', char '{pat[pos]}' (end), super-char '{super_char}', pos '{char_pos_from_right}', bucket '{b}', next_val {next_val}", log_file=log_file)
 
     return masks
     
