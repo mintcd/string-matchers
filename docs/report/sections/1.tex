@@ -193,13 +193,13 @@ Let us use a different approach to compute $\PP(B)$, which then can then be appl
 $$S_j=\{x\in U \mid x[8j\ldots 8j+7] = 0^8\}, j\in\{0,\ldots, 7\}.$$
 
 Then $B$ is the event that there is at least one pattern in each $S_j$ i.e. the set $\{X_1,\ldots,X_p\}$ hits all $S_j$'s. Then $B^c$ is the event that there is some $j$ such that $\{X_1,\ldots,X_p\}$ does not hit $S_j$.
-$$B^c = \bigcup_{j=1}^8 \underbrace{\bigcap_{i=1}^p \{X_i\notin S_j\}}_{E_j}.$$
+$$B^c = \bigcup_{j=0}^7 \underbrace{\bigcap_{i=1}^p \{X_i\notin S_j\}}_{E_j}.$$
 By inclusion-exclusion,
 \begin{align*}
   \PP(B)
-   & = 1-\PP\left(\bigcup_{j=1}^8 E_j\right)                                                                                                                                         \\
+   & = 1-\PP\left(\bigcup_{j=0}^7 E_j\right)                                                                                                                                         \\
    & = 1-\sum_{\varnothing\ne L \subset \{0\ldots 7\}} (-1)^{|L|+1}\PP\left(\bigcap_{j\in L} E_j\right)                                                                              \\
-   & = 1+\sum_{\varnothing\ne L \subset \{0\ldots 7\}} (-1)^{|L|}\PP\left(\bigcap_{j=1}^8\bigcap_{i=1}^p \{X_i\notin S_j\}\right)                                                    \\
+   & = 1+\sum_{\varnothing\ne L \subset \{0\ldots 7\}} (-1)^{|L|}\PP\left(\bigcap_{j\in L}\bigcap_{i=1}^p \{X_i\notin S_j\}\right)                                                   \\
    & = 1+\sum_{\varnothing\ne L \subset \{0\ldots 7\}} (-1)^{|L|}\PP\left(\bigcap_{i=1}^p \left\{X_i\notin \bigcup_{j\in L}S_j\right\}\right)                                        \\
    & = 1+\sum_{\varnothing\ne L \subset \{0\ldots 7\}} (-1)^{|L|}\PP\left(X_1\notin \bigcup_{j\in L} S_j\right)^p                             & (\text{since }X_i\text{'s are iid}).
 \end{align*}
@@ -246,7 +246,7 @@ By Euler's Candies Division again, there are $\binom{8-k}{u}$ ways to do this. N
 $$\binom{k-1}{u-1}\binom{8-k}{u}.$$
 From that formula, we derive that $u\in\min\{k,8-k\}$. Hence,
 $$\PP\left(X_1\in \bigcap\limits_{j\in K}S^{(s)}_j\right) = \sum\limits_{k=1}^7 \sum\limits_{u=1}^{\min\{k,8-k\}}(-1)^k \binom{k-1}{u-1}\binom{8-k}{u}\dfrac{1}{2^{8k+u(s-8)}}.$$
-I think we can elaborate more to count the number of subsets $L$ having $v_i$ clusters of size $i$ for $i\in\{1,\ldots, 7\}$. I am not sure if I can get an asymptotic approximation to compare with the case without super-characters.
+I think we can elaborate more to count the number of subsets $L$ having $v_i$ clusters of size $i$ for $i\in\{1,\ldots, 7\}$. I am not sure if I can get an asymptotic approximation to compare with the case without super-characters. Experiment is available in the \href{https://github.com/mintcd/string-matchers/blob/main/src/py_fdr/experiments/compare_supercharacter.ipynb}{repository}, showing that the probability of a positive is significantly reduced by using super-characters.
 
 
 \section{Problem Statement}
