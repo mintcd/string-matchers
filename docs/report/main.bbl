@@ -1,0 +1,81 @@
+% $ biblatex auxiliary file $
+% $ biblatex bbl format version 3.3 $
+% Do not modify the above lines!
+%
+% This is an auxiliary file used by the 'biblatex' package.
+% This file may safely be deleted. It will be recreated by
+% biber as required.
+%
+\begingroup
+\makeatletter
+\@ifundefined{ver@biblatex.sty}
+  {\@latex@error
+     {Missing 'biblatex' package}
+     {The bibliography requires the 'biblatex' package.}
+      \aftergroup\endinput}
+  {}
+\endgroup
+
+
+\refsection{0}
+  \datalist[entry]{nty/global//global/global/global}
+    \entry{wang2019hyperscan}{inproceedings}{}{}
+      \name{author}{7}{}{%
+        {{hash=8fde8559617f603b3e2b3cf30cb48e9b}{%
+           family={Wang},
+           familyi={W\bibinitperiod},
+           given={Xiang},
+           giveni={X\bibinitperiod}}}%
+        {{hash=68f1aaaba42b1d8ddc0fafb6938bb7a5}{%
+           family={Hong},
+           familyi={H\bibinitperiod},
+           given={Yang},
+           giveni={Y\bibinitperiod}}}%
+        {{hash=21f66cd17db33cf545c57184893400df}{%
+           family={Chang},
+           familyi={C\bibinitperiod},
+           given={Harry},
+           giveni={H\bibinitperiod}}}%
+        {{hash=5effde06384aee7d77e8fdb2b97409d6}{%
+           family={Park},
+           familyi={P\bibinitperiod},
+           given={KyoungSoo},
+           giveni={K\bibinitperiod}}}%
+        {{hash=cd81ba17408975530bac4b8003da2e35}{%
+           family={Langdale},
+           familyi={L\bibinitperiod},
+           given={Geoff},
+           giveni={G\bibinitperiod}}}%
+        {{hash=695f3ae16b9a2a7e9b1c8c7446dc3043}{%
+           family={Hu},
+           familyi={H\bibinitperiod},
+           given={Jiayu},
+           giveni={J\bibinitperiod}}}%
+        {{hash=93416728ec04ad5ad956024abd6b9bcd}{%
+           family={Zhu},
+           familyi={Z\bibinitperiod},
+           given={Heqing},
+           giveni={H\bibinitperiod}}}%
+      }
+      \strng{namehash}{35ac326fad78d42d0760cfb75887ea69}
+      \strng{fullhash}{b480ddea5bcb99af36e588a50b914acf}
+      \strng{fullhashraw}{b480ddea5bcb99af36e588a50b914acf}
+      \strng{bibnamehash}{35ac326fad78d42d0760cfb75887ea69}
+      \strng{authorbibnamehash}{35ac326fad78d42d0760cfb75887ea69}
+      \strng{authornamehash}{35ac326fad78d42d0760cfb75887ea69}
+      \strng{authorfullhash}{b480ddea5bcb99af36e588a50b914acf}
+      \strng{authorfullhashraw}{b480ddea5bcb99af36e588a50b914acf}
+      \field{sortinit}{W}
+      \field{sortinithash}{4315d78024d0cea9b57a0c6f0e35ed0d}
+      \field{labelnamesource}{author}
+      \field{labeltitlesource}{title}
+      \field{booktitle}{16th USENIX Symposium on Networked Systems Design and Implementation (NSDI 19)}
+      \field{title}{Hyperscan: A fast multi-pattern regex matcher for modern $\{$CPUs$\}$}
+      \field{year}{2019}
+      \field{pages}{631\bibrangedash 648}
+      \range{pages}{18}
+    \endentry
+  \enddatalist
+\endrefsection
+\endinput
+
