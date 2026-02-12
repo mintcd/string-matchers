@@ -90,4 +90,5 @@ venv/
 *.log
 *.toc
 *.run.xml
+*.out
 *.synctex.gz

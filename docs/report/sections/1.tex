@@ -148,10 +148,10 @@ Let there be only one bucket and all patterns have the same length $8$. This giv
 
 It is clear that the complexity of the compilation phase is $\O(p)$, since the number of characters to build masks are fixed.
 
-In the execution phase, each position in the state mask $R$ has to be or-ed at most $8$ times, while $8$ positions are updated at the same time. Each iteration scans $8$ characters. Hence the complexity is roughly given by
+In the execution phase, each position in the state mask $R$ has to be or-ed at most $8$ times, while $8$ positions are updated at the same time. Hence the complexity is roughly given by
 \[
   \begin{aligned}
-    C & = \O\!\left(\frac{n}{8}\right)\times [\text{cost of each iteration}]                 \\
+    C & = \O\!\left(n\right)\times [\text{cost of each iteration}]                           \\
       & = \O(n)\times\Big( [\text{cost of ors}]                                              \\
       & \qquad + \PP(\text{no positive})\times 0                                             \\
       & \qquad + \PP(\text{positive but not matched})\times[\text{cost of rejection}]        \\
@@ -184,10 +184,10 @@ $$\PP(D^c)\le \dfrac{\binom{p}{2}\times N\times N^{p-2}}{N^p} = \dfrac{\binom{p}
 This is indeed negligible because $N$ is very large. Now we compute $\PP(B)$, the probability that there is a positive. Since $Y$ is uniformly distributed and independent of the patterns, we can fix $Y=0^{64}$. Let us count the number of possible values of $X_1,\ldots,X_p$ such that there is a positive. There are in total $N^p$ possible values of $X_1,\ldots,X_p$. For each position $i$ from $0$ to $7$, there are $2^8=256$ possible characters. But $00000000$ is forbidden. Hence there are $255$ available possible characters allowed for the patterns. Therefore, there are $255^p$ possible values of $X_1[8i\ldots 8i+7],\ldots,X_p[8i\ldots 8i+7]$ such that there is no positive. Hence, there are $(N^p-255^p)^8$ possible values of $X_1,\ldots,X_p$ such that there is a positive. Therefore,
 $$\PP(B) = \dfrac{(N^p-255^p)^8}{N^{8p}} = \left(1-\left(\dfrac{255}{256}\right)^p\right)^8.$$
 
-When $p\ge 355$, $\PP(B)\ge 0.1$. The algorithm starts to be inefficient. Suppose that $p$ patterns are divided into $8$ buckets uniformly. Then the new probability of a positive bounded by
-$$1-\left(1-\left(1-\left(\dfrac{255}{256}\right)^{p/8}\right)^8\right)^8.$$
+When $p\ge 135$, $p\PP(B)\ge 0.1$. The algorithm starts to be inefficient. Suppose that $p$ patterns are divided into $8$ buckets evenly. Then the new probability of a positive is
+$$\PP(B)=1-\left(1-\left(1-\left(\dfrac{255}{256}\right)^{p/8}\right)^8\right)^8.$$
 
-This reaches $0.1$ when $p\ge 1800$.
+The new $p\PP(B)$ exceeds $0.1$ when $p\ge 460$.
 
 Let us use a different approach to compute $\PP(B)$, which then can then be applied to compute $\PP(B\mid D)$, and the case where super-characters are used. Again, since $Y$ is uniformly distributed and independent of the patterns, we can fix $Y=0^{64}$. Let $U=\{0,1\}^{64}$ be the universe. Define the sets
 $$S_j=\{x\in U \mid x[8j\ldots 8j+7] = 0^8\}, j\in\{0,\ldots, 7\}.$$
@@ -204,7 +204,7 @@ By inclusion-exclusion,
    & = 1+\sum_{\varnothing\ne L \subset \{0\ldots 7\}} (-1)^{|L|}\PP\left(X_1\notin \bigcup_{j\in L} S_j\right)^p                             & (\text{since }X_i\text{'s are iid}).
 \end{align*}
 
-Consider the event $V_L = (X_1\notin \bigcup_{j\in L} S_j)$. To make this event happen, we can only choose $2^8-1=255$ possible strings for $X_1[8j\ldots 8j+7]$ for each $j\in L$ and $2^8=256$ possible strings for each $j\notin L$. Hence,
+The events $\{X_1\notin S_j\}, j\in L$ are in fact independent, since the $S_j$'s forbid $0^8$ at disjoint positions. Let $V_L = (X_1\notin \bigcup_{j\in L} S_j)$. It will be clear when we calculate $\PP(V_L)$. To make $V_L$ happen, we can only choose $2^8-1=255$ possible strings for $X_1[8j\ldots 8j+7]$ for each $j\in L$ and $2^8=256$ possible strings for each $j\notin L$. Hence,
 
 $$\PP\left(V_L\right) = \dfrac{256^{8-|L|}\times 255^{|L|}}{N} = \left(\dfrac{255}{256}\right)^{|L|}.$$
 
@@ -246,13 +246,15 @@ By Euler's Candies Division again, there are $\binom{8-k}{u}$ ways to do this. N
 $$\binom{k-1}{u-1}\binom{8-k}{u}.$$
 From that formula, we derive that $u\in\min\{k,8-k\}$. Hence,
 $$\PP\left(X_1\in \bigcap\limits_{j\in K}S^{(s)}_j\right) = \sum\limits_{k=1}^7 \sum\limits_{u=1}^{\min\{k,8-k\}}(-1)^k \binom{k-1}{u-1}\binom{8-k}{u}\dfrac{1}{2^{8k+u(s-8)}}.$$
-I think we can elaborate more to count the number of subsets $L$ having $v_i$ clusters of size $i$ for $i\in\{1,\ldots, 7\}$. I am not sure if I can get an asymptotic approximation to compare with the case without super-characters. Experiment is available in the \href{https://github.com/mintcd/string-matchers/blob/main/src/py_fdr/experiments/compare_supercharacter.ipynb}{repository}, showing that the probability of a positive is significantly reduced by using super-characters.
+I think we can elaborate more to count the number of subsets $L$ having $v_i$ clusters of size $i$ for $i\in\{1,\ldots, 7\}$. I am not sure if I can get an asymptotic approximation to compare with the case without super-characters. Experiment is available in the \href{https://github.com/mintcd/string-matchers/blob/main/src/py_fdr/experiments/compare_supercharacter.ipynb}{repository}, showing that the probability of a positive is significantly reduced by using super-characters. In the experiment, we iterate through subsets $L$ of $\{1,\ldots,7\}$, then subsets $K$ of $L$, no matter if $S$ has more than one cluster or not. The formula is
+$$\PP(B) \le 1+\sum\limits_{\varnothing\ne L\subset \{1,\ldots, 7\}} (-1)^{|L|}\left(1+\sum\limits_{\varnothing\neq K\subset L}(-1)^{|K|} \dfrac{1}{2^{|\bigcup_{j\in K} R_j|}}\right)^p.$$
 
 
 \section{Problem Statement}
 
 In general, problem is stated as follows. Let $\D_{P}$ be the distribution of patterns and $\D_T$ be the distribution the text. Let the domain of the patterns be $\X$ and the domain of the text be $\Y$. We have to write the risk $R_p$ i.e. the probability of a positive, as a function of $\D_P$ and $\D_T$ when $p$ patterns are drawn from $\D_P$ and the text is drawn from $\D_T$.
 
-An algorithm takes the patterns i.e. $\X^p$ and produces an assignment $f:\bigcup\limits_{p\in \NN} \X^p \to \{0,\ldots, 7\}$. It aims to minimize another risk over only $\X^p$.
+An algorithm takes the patterns i.e. $\X^p$ and produces an assignment $f:\bigcup\limits_{p\in \NN} \X^p \to \{0,\ldots, 7\}$. It aims to minimize another risk $\hat{R}_p$ over only $\X^p$.
 
-Then we have to provide an upper bound for the difference between the two risks.
+We would like to see if following difference can be bounded e.g.
+$$\frac{1}{n}\sum_{i=1}^n \left|\min R_p - \min \hat{R}_p\right|$$
